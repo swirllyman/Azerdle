@@ -1,6 +1,6 @@
 ## Interface: 16001
 ## Title: Word of Warcraft
-## Notes: A daily Azeroth-themed word puzzle with guild, friends and global leaderboards. (/wow)
+## Notes: A daily Azeroth-themed word puzzle. Same word for everyone, new every day. Type /wow to play.
 ## Author: Joe Greive
 ## Version: @project-version@
 ## SavedVariables: WordOfWarcraftDB
