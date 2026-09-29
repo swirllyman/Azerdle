@@ -119,6 +119,14 @@ notices filtered). Every client with the addon **answers pings automatically**; 
 - Sender fields (never text) of ordinary chat events (whisper, guild, party, say, BN whisper) are logged, up to 30
   per session, to compare with CHAT_MSG_ADDON's sender.
 
+## Releasing
+
+GitHub: `swirllyman/Word-Of-Warcraft` (branch `main`). CurseForge project 1718001. Pushing a `v*` tag runs
+`.github/workflows/release.yml` (BigWigs packager), which builds the zip per `.pkgmeta`, uploads it to CurseForge
+(project ID from `## X-Curse-Project-ID` in the .toc, token from the `CF_API_KEY` repo secret) and creates a GitHub
+release. `alpha`/`beta` in the tag name gives that release type. No CurseForge webhook: it never produced a file.
+Check a run with `gh run view <id> --log` ("Uploading ... to https://wow.curseforge.com/..." then "Success!").
+
 ## Working on it
 
 - **Game install:** `C:\Program Files (x86)\World of Warcraft\_classic_beta_\`. `Interface\AddOns\WordOfWarcraft`
