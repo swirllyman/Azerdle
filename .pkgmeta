@@ -1,0 +1,11 @@
+# CurseForge packager: the addon lives in WordOfWarcraft/, not at the repo root. The repo is checked out as
+# Word-Of-Warcraft/, the addon folder is moved out to the top of the zip, and the rest is left out.
+package-as: Word-Of-Warcraft
+
+move-folders:
+  Word-Of-Warcraft/WordOfWarcraft: WordOfWarcraft
+
+ignore:
+  - tools
+  - CLAUDE.md
+  - README.md
