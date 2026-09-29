@@ -1,0 +1,159 @@
+"""Runs the comms probe on two fake clients wired together and checks the ping / ACK / whisper-variant flow,
+including a client whose sender names arrive as secret values. Catches runtime errors, not in-game behaviour.
+
+    pip install lupa
+    python tools/test_probe.py
+"""
+import sys
+
+from fakewow import Client
+
+PREFIX = "WoWordProbe"
+
+
+class Router:
+    """Delivers addon messages between clients. Whispers only arrive when addressed by an accepted name."""
+
+    def __init__(self, clients, accepted, sender_names, secret_senders=False):
+        self.clients = clients
+        self.accepted = accepted          # client -> set of names that whispers reach
+        self.sender_names = sender_names  # client -> sender string CHAT_MSG_ADDON reports
+        self.secret_senders = secret_senders
+        self.delivered = []
+
+    def sender_for(self, src, dst):
+        s = self.sender_names[src]
+        return dst.secret(s) if self.secret_senders else s
+
+    def step(self):
+        moved = False
+        for src in self.clients:
+            for m in src.take_outbox():
+                moved = True
+                if m["prefix"] != PREFIX:
+                    continue
+                if m["dist"] == "WHISPER":
+                    target = m["target"]
+                    for dst in self.clients:
+                        if dst is not src and isinstance(target, str) and target in self.accepted[dst]:
+                            self.deliver(src, dst, m)
+                            break
+                    else:
+                        shown = target if isinstance(target, str) else "<secret>"
+                        src.fire("CHAT_MSG_SYSTEM", "No player named '%s' is currently playing." % shown)
+                else:
+                    for dst in self.clients:   # broadcasts echo back to the sender too
+                        self.deliver(src, dst, m)
+        return moved
+
+    def deliver(self, src, dst, m):
+        self.delivered.append((src.name, dst.name, m["dist"], m["text"].split(";")[0]))
+        dst.fire("CHAT_MSG_ADDON", PREFIX, m["text"], m["dist"], self.sender_for(src, dst), dst.name, 0, 0, "", 0)
+
+    def run(self, seconds=30):
+        for _ in range(seconds * 5):
+            for c in self.clients:
+                c.advance(0.2)
+            self.step()
+
+
+def check(cond, msg):
+    if not cond:
+        print("FAIL:", msg)
+        sys.exit(1)
+    print("ok  ", msg)
+
+
+def scenario(secret_senders):
+    a = Client("John", "Player-1-0001")
+    b = Client("Mary", "Player-1-0002")
+    a.lua.globals().PEERS["Player-1-0002"] = {"name": "Mary"}
+    b.lua.globals().PEERS["Player-1-0001"] = {"name": "John"}
+    # Forever-style: the sender string is the two-part display name; whispers only reach the character name.
+    router = Router([a, b],
+                    accepted={a: {"John", "John-Forever"}, b: {"Mary", "Mary-Forever"}},
+                    sender_names={a: "John Doe-Forever", b: "Mary Sue-Forever"},
+                    secret_senders=secret_senders)
+    router.run(8)   # login channel join
+    a.slash("probe")
+    router.run(40)
+    b.lua.globals().TARGET = None
+    a.lua.globals().TARGET = a.lua.table_from({"name": "Mary", "guid": "Player-1-0002"})
+    a.slash("probe target")
+    a.slash("probe whisper Nobody")
+    a.slash("probe auto")
+    a.fire("PLAYER_REGEN_DISABLED")
+    router.run(90)
+    a.slash("probe status")
+    a.slash("probe note in combat test")
+
+    label = "secret senders" if secret_senders else "plain senders"
+    for c in (a, b):
+        check(not c.errors(), f"[{label}] no Lua errors on {c.name}: {c.errors()[:3]}")
+    alog, blog = "\n".join(a.log()), "\n".join(b.log())
+    for dist in ("GUILD", "CHANNEL", "PARTY"):
+        check(f"got PING" in blog and f"via {dist}" in blog, f"[{label}] B received PING via {dist}")
+    check("self echo of PING" in alog, f"[{label}] A logs its own echo")
+    check("got ACKB" in alog, f"[{label}] A gets broadcast ACKs")
+    check("got WV" in alog, f"[{label}] A gets whisper variants")
+    check("form 'UnitName' = 'Mary'" not in alog, f"[{label}] WV only reports forms addressed to A")
+    check("UnitName+ByGUID' = 'John' ARRIVED" in alog, f"[{label}] UnitName form arrives")
+    check("W-UnitName" in blog, f"[{label}] B receives target whisper ping by UnitName")
+    check("system message after whisper" in alog, f"[{label}] failed whisper's system message logged")
+    check("combat start" in alog and "auto timer" in alog, f"[{label}] auto rounds run")
+    check("NOTE: in combat test" in alog, f"[{label}] notes logged")
+    if not secret_senders:
+        # The router only accepts whispers to character names, so the ACK to the raw sender string fails
+        # (B logs the system message) and A learns its sender string from the broadcast ACKB instead.
+        check("got ACK for" not in alog, f"[{label}] ACK to unaddressable sender string doesn't arrive")
+        check("system message after whisper" in blog, f"[{label}] B logs the failed ACK whisper")
+        check("they saw me as 'John Doe-Forever'" in alog, f"[{label}] ACKB reports how B saw A's name")
+        check("form 'sender' = 'John Doe-Forever'" not in alog, f"[{label}] WV by raw sender doesn't arrive")
+    else:
+        check("<secret>" in blog, f"[{label}] B logs secret sender as <secret>")
+    check("=== guild roster ===" in alog, f"[{label}] guild roster dumped")
+    check("C_ChatInfo:" in alog, f"[{label}] API discovery ran")
+
+
+def bn_scenario():
+    a = Client("John", "Player-1-0001")
+    g = a.lua.globals()
+    g.BN_FRIENDS = a.lua.table_from([a.lua.table_from({
+        "bnetAccountID": 5, "isFriend": True,
+        "gameAccountInfo": a.lua.table_from({"isOnline": True, "gameAccountID": 77, "clientProgram": "WoW",
+                                             "characterName": "Mary", "realmName": "Forever", "wowProjectID": 99})})])
+    a.advance(8)
+    a.slash("probe ping")
+    a.advance(10)
+    sent = list(g.bnOutbox.values())
+    check(any(m["id"] == 77 and m["text"].startswith("PING") for m in sent), "BN ping sent to friend's game account")
+    a.fire("BN_CHAT_MSG_ADDON", PREFIX, "PING;abcd1;BN;Player-1-0002;Mary;Sue;Forever;1790000000", "WHISPER", 77)
+    a.advance(2)
+    sent = list(g.bnOutbox.values())
+    check(any(m["id"] == 77 and m["text"].startswith("ACK;abcd1") for m in sent), "BN ping answered with ACK")
+    check(not a.errors(), "no Lua errors in BN scenario")
+
+
+def forever_names_scenario():
+    """Forever: UnitName gives ("Bear", "Joegre"); suppose only "First-Surname" addresses whispers. The probe must
+    try that form and report it as arrived."""
+    a = Client("Bear", "Player-1-0001", surname="Joegre")
+    b = Client("Totem", "Player-1-0002", surname="Claus")
+    router = Router([a, b], accepted={a: {"Bear-Joegre"}, b: {"Totem-Claus"}},
+                    sender_names={a: "Bear-Joegre", b: "Totem-Claus"})
+    router.run(8)
+    a.slash("probe ping")
+    router.run(40)
+    alog = "\n".join(a.log())
+    check("Name-Surname' = 'Bear-Joegre' ARRIVED" in alog, "[forever names] Name-Surname whisper form tried and arrives")
+    check("= 'Bear' ARRIVED" not in alog, "[forever names] first name alone doesn't arrive")
+    check("got ACK for" in alog, "[forever names] ACK to the raw sender arrives")
+    check(not a.errors() and not b.errors(), "[forever names] no Lua errors")
+
+
+if __name__ == "__main__":
+    forever_names_scenario()
+    scenario(False)
+    scenario(True)
+    bn_scenario()
+    print("all probe tests passed")

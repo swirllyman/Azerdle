@@ -1,0 +1,13 @@
+GRUUL  # TBC raid boss (Gruul the Dragonkiller)
+NAARU  # TBC celestial beings
+VASHJ  # TBC raid boss (Lady Vashj)
+AKAMA  # TBC character
+BAINE  # Cataclysm-era character, son of Cairne (spoiler)
+BROLL  # obscure novel/comic character (Broll Bearmantle)
+DRAKA  # obscure lore figure, Thrall's mother
+HYJAL  # Mount Hyjal, tied to later raid content
+ULDUM  # Cataclysm zone name
+PANDA  # Pandaren, Mists of Pandaria
+AMANI  # Amani troll empire, niche lore term
+ZANZA  # Zul'Gurub raid boss
+JINDO  # Zul'Gurub raid boss (Jin'do the Hexxer)

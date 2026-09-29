@@ -1,0 +1,13 @@
+# Lowercase 5-letter words that must never be accepted as guesses, even though
+# they may pass a generic English dictionary check. Slurs and strongly
+# offensive terms only -- this is a narrow safety filter, not a profanity list.
+# Keep this list short; do not add mild words (e.g. "damn") here.
+nigga
+chink
+dykes
+gooks
+honky
+kraut
+whore
+twats
+coons

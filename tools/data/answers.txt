@@ -1,0 +1,248 @@
+# --- class ---
+DRUID  # class
+ROGUE  # class
+MELEE  # class: melee combat role
+PALLY  # class: player slang for paladin
+
+# --- race ---
+HUMAN  # race
+DWARF  # race
+GNOME  # race
+TROLL  # race
+
+# --- creature ---
+GNOLL  # creature
+HYDRA  # creature
+DRAKE  # creature: young/lesser dragon
+WHELP  # creature: young dragon
+TIGER  # creature
+SNAKE  # creature
+EAGLE  # creature
+RAVEN  # creature
+GHOUL  # creature: undead flesh-eater
+GIANT  # creature
+GOLEM  # creature
+GHOST  # creature
+SLIME  # creature: ooze-type monster
+HARPY  # creature
+TROGG  # creature: dwarven-lands enemy
+COBRA  # creature: e.g. Tanaris/Silithus snakes
+CRANE  # creature
+VIPER  # creature
+HORSE  # creature
+SHEEP  # creature: classic Polymorph target
+BEAST  # creature: generic hunter-pet term
+SATYR  # creature: Felwood/Moonglade enemy
+SHADE  # creature: generic undead spirit
+FIEND  # creature: generic demon-kin
+HOUND  # creature: hellhound/warlock pet, hunter pet
+DRYAD  # creature: night elf forest spirit
+WIGHT  # creature: generic undead
+STEED  # creature: mount
+BROOD  # creature: dragon broods, Broodmother
+
+# --- character ---
+UTHER  # character: Uther the Lightbringer
+JAINA  # character: Jaina Proudmoore
+MAGNI  # character: Magni Bronzebeard
+BRANN  # character: Brann Bronzebeard
+MOIRA  # character: Moira Thaurissan
+EDWIN  # character: Edwin VanCleef
+YSERA  # character: Dragon Aspect of the Dream
+LLANE  # character: King Llane Wrynn
+BARON  # character: generic noble title, e.g. Baron Rivendare
+QUEEN  # character: generic noble title
+ELDER  # character: generic tribal elder title
+GUARD  # character: generic city guard
+THIEF  # character: generic rogue-flavored role
+
+# --- place ---
+CRYPT  # place
+GORGE  # place: e.g. Searing Gorge
+GROVE  # place
+SHORE  # place
+RIDGE  # place: e.g. Redridge
+BLUFF  # place: e.g. Thunder Bluff
+SPIRE  # place: e.g. Blackrock Spire
+ALTAR  # place
+GLADE  # place: e.g. Moonglade
+MARSH  # place
+TOWER  # place
+CLIFF  # place
+SWAMP  # place: e.g. Swamp of Sorrows
+ARENA  # place: e.g. Gurubashi Arena
+BASIN  # place: e.g. Loch Modan
+MANOR  # place: gothic haunted manor
+OASIS  # place: e.g. Tanaris
+STORM  # place: e.g. Stormwind
+EMBER  # place: e.g. Searing Gorge/Burning Steppes
+GRAVE  # place: graveyard
+CAIRN  # place: stone landmark
+ROOST  # place: gryphon/wind rider roost
+AERIE  # place: high nest, e.g. gryphon aerie
+ABYSS  # place: the abyss/void
+GULCH  # place: Warsong Gulch
+
+# --- item ---
+FLASK  # item
+BREAD  # item
+WATER  # item
+STEEL  # item
+SCALE  # item: leatherworking material
+SHARD  # item: enchanting material
+TOTEM  # item: shaman totem
+DRINK  # item
+CHEST  # item: treasure chest
+TOKEN  # item
+TORCH  # item
+STONE  # item
+POUCH  # item: ammo/reagent pouch
+PEARL  # item
+TOPAZ  # item: gem
+AGATE  # item: gem
+SCALP  # item: quest turn-in (e.g. troll scalps)
+SKULL  # item: quest turn-in
+HEART  # item: quest turn-in
+VENOM  # item: quest turn-in
+PLUME  # item: quest turn-in
+LINEN  # item: Linen Cloth, lowest-tier cloth
+LOTUS  # item: Black Lotus
+
+# --- gear ---
+SWORD  # gear
+STAFF  # gear
+PLATE  # gear: armor type
+CLOTH  # gear: armor type
+BLADE  # gear
+SPEAR  # gear
+CLOAK  # gear
+TUNIC  # gear
+CHAIN  # gear: mail armor
+ARMOR  # gear
+GLOVE  # gear
+KNIFE  # gear
+LANCE  # gear
+RIFLE  # gear
+ARROW  # gear
+CROWN  # gear
+FLAIL  # gear
+SABER  # gear
+RELIC  # gear
+SPIKE  # gear
+
+# --- magic ---
+FROST  # magic
+FLAME  # magic
+BLAZE  # magic
+SPARK  # magic
+SHOCK  # magic: e.g. shaman shock spells
+CURSE  # magic
+CHARM  # magic
+MAGIC  # magic
+SPELL  # magic
+BLESS  # magic
+DEATH  # magic
+LIGHT  # magic: the Holy Light
+SIGIL  # magic
+BLOOD  # magic: e.g. Bloodlust
+TONIC  # magic: elixir-like brew
+BLINK  # magic: mage Blink
+HASTE  # magic: haste stat
+DODGE  # magic: dodge stat
+PARRY  # magic: parry stat
+BLOCK  # magic: block stat
+SLEEP  # magic: sleep effect
+SMITE  # magic: priest Smite
+BLAST  # magic
+BOUND  # magic: soulbound
+FLASH  # magic
+NIGHT  # magic
+SOLAR  # magic
+LUNAR  # magic: moon magic
+EARTH  # magic: shaman element
+GOUGE  # magic: rogue ability
+BLIND  # magic: rogue ability
+SHRED  # magic: feral druid ability
+SWIPE  # magic: bear ability
+ROOTS  # magic: Entangling Roots
+RENEW  # magic: priest heal
+PURGE  # magic: shaman ability
+STING  # magic: Serpent/Viper Sting
+SCARE  # magic: Scare Beast
+AGONY  # magic: Curse of Agony
+THORN  # magic: Thorns
+DAZED  # magic: the Dazed debuff
+
+# --- gameplay ---
+QUEST  # gameplay
+GUILD  # gameplay
+PARTY  # gameplay
+TRADE  # gameplay
+LEVEL  # gameplay
+GROUP  # gameplay
+MOUNT  # gameplay: rideable mount
+VAULT  # gameplay: bank vault
+TRAIN  # gameplay: train a skill
+SKILL  # gameplay
+RESET  # gameplay: dungeon reset
+CRAFT  # gameplay
+SMITH  # gameplay: blacksmithing
+FORGE  # gameplay: crafting forge
+EMOTE  # gameplay
+DANCE  # gameplay: dance emote
+CHEER  # gameplay: cheer emote
+STACK  # gameplay: item stacking
+FLARE  # gameplay
+GRIND  # gameplay: farming/leveling slang
+BRAWL  # gameplay
+AGGRO  # gameplay
+TAUNT  # gameplay: warrior ability
+BURST  # gameplay: burst damage
+CLEAR  # gameplay: clear a dungeon
+QUEUE  # gameplay
+SPAWN  # gameplay: mob spawn
+TRACK  # gameplay: hunter Track ability
+SIEGE  # gameplay: e.g. Alterac Valley
+HONOR  # gameplay: honor points
+EVADE  # gameplay
+SNARE  # gameplay: hunter trap
+FEIGN  # gameplay: Feign Death
+SHIFT  # gameplay: druid shapeshift
+MORPH  # gameplay: polymorph
+COMBO  # gameplay: rogue combo points
+STASH  # gameplay
+HOARD  # gameplay
+BOOST  # gameplay
+RIVAL  # gameplay
+CRUSH  # gameplay
+WOUND  # gameplay
+BLEED  # gameplay: bleed effect
+CHILL  # gameplay: frost chill
+DRAIN  # gameplay: warlock life drain
+MACRO  # gameplay
+ADDON  # gameplay
+SHOUT  # gameplay: chat channel
+TWINK  # gameplay: low-level PvP slang
+NINJA  # gameplay: ninja looting
+GREED  # gameplay: Need/Greed rolls
+HATED  # gameplay: lowest reputation level
+GRUNT  # gameplay: Horde rank / orc footsoldier
+TRASH  # gameplay: trash mobs
+
+# --- lore ---
+ELUNE  # lore: night elf goddess
+TITAN  # lore
+DEMON  # lore
+HORDE  # lore: the Horde faction
+TRIBE  # lore
+DREAM  # lore: the Emerald Dream
+WORLD  # lore
+REALM  # lore
+FAITH  # lore
+VALOR  # lore
+MIGHT  # lore
+WRATH  # lore
+FERAL  # lore: feral druids
+AZURE  # lore: Azure dragonflight, Azshara
+ASHEN  # lore: Ashenvale
+ELVEN  # lore: elven kingdoms
