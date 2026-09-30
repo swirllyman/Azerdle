@@ -1,4 +1,4 @@
--- Word of Warcraft: shared core (namespace, saved variables, log, events, slash commands).
+-- Azerdle: shared core (namespace, saved variables, log, events, slash commands).
 -- Other files share `ns` and register their slash subcommands in ns.commands.
 
 local ADDON, ns = ...
@@ -35,11 +35,11 @@ function ns.showS(v)
 end
 
 function ns.print(msg)
-    DEFAULT_CHAT_FRAME:AddMessage("|cffe6b800Word of Warcraft|r " .. msg)
+    DEFAULT_CHAT_FRAME:AddMessage("|cffe6b800Azerdle|r " .. msg)
 end
 
 ---------------------------------------------------------------------------
--- Log (saved to WordOfWarcraftDB.log; read after the user plays)
+-- Log (saved to AzerdleDB.log; read after the user plays)
 ---------------------------------------------------------------------------
 
 local pendingLog = {}   -- lines logged before ADDON_LOADED
@@ -87,11 +87,11 @@ end)
 
 ns.on("ADDON_LOADED", function(name)
     if name ~= ADDON then return end
-    WordOfWarcraftDB = WordOfWarcraftDB or {}
-    ns.db = WordOfWarcraftDB
+    AzerdleDB = AzerdleDB or {}
+    ns.db = AzerdleDB
     ns.db.log = ns.db.log or {}
-    WordOfWarcraftCharDB = WordOfWarcraftCharDB or {}   -- per character: stats and today's game
-    ns.cdb = WordOfWarcraftCharDB
+    AzerdleCharDB = AzerdleCharDB or {}   -- per character: stats and today's game
+    ns.cdb = AzerdleCharDB
     for _, line in ipairs(pendingLog) do ns.db.log[#ns.db.log + 1] = line end
     pendingLog = {}
     ns.db.options = ns.db.options or {}
@@ -113,7 +113,7 @@ end)
 ns.onLoaded = {}
 
 ---------------------------------------------------------------------------
--- Options (account-wide, WordOfWarcraftDB.options). Only values that differ from the default are saved, so
+-- Options (account-wide, AzerdleDB.options). Only values that differ from the default are saved, so
 -- changing a default later reaches everyone who never touched that option. Options.lua fills in the defaults
 -- and the panel; any file may read an option with ns.opt, even before saved variables exist.
 ---------------------------------------------------------------------------
@@ -138,18 +138,20 @@ function ns.setOpt(key, value)
 end
 
 ---------------------------------------------------------------------------
--- Slash commands: /wow <subcommand> [args]. ns.commands[""] handles a bare /wow (the game window).
+-- Slash commands: /azerdle <subcommand> [args], or the short /azd. ns.commands[""] handles a bare /azerdle (the
+-- game window).
 ---------------------------------------------------------------------------
 
-SLASH_WORDOFWARCRAFT1 = "/wow"
-SlashCmdList.WORDOFWARCRAFT = function(input)
+SLASH_AZERDLE1 = "/azerdle"
+SLASH_AZERDLE2 = "/azd"
+SlashCmdList.AZERDLE = function(input)
     input = input or ""
     local cmd, rest = input:match("^%s*(%S*)%s*(.-)%s*$")
     cmd = (cmd or ""):lower()
     local fn = ns.commands[cmd]
     if fn and cmd ~= "help" then
         local ok, err = pcall(fn, rest or "")
-        if not ok then ns.log("/wow " .. cmd .. ": ERROR " .. tostring(err), true) end
+        if not ok then ns.log("/azerdle " .. cmd .. ": ERROR " .. tostring(err), true) end
         return
     end
     ns.print("commands:")
@@ -170,6 +172,6 @@ ns.commands.clearlog = function()
     ns.db.log = {}
     ns.print("log cleared")
 end
-table.insert(ns.help, "/wow log [n] - show the last n log lines")
-table.insert(ns.help, "/wow echo - toggle echoing every log line to chat")
-table.insert(ns.help, "/wow clearlog - empty the saved log")
+table.insert(ns.help, "/azerdle log [n] - show the last n log lines")
+table.insert(ns.help, "/azerdle echo - toggle echoing every log line to chat")
+table.insert(ns.help, "/azerdle clearlog - empty the saved log")

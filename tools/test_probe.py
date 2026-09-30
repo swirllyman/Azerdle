@@ -8,7 +8,7 @@ import sys
 
 from fakewow import Client
 
-PREFIX = "WoWordProbe"
+PREFIX = "AzerdleProbe"
 
 
 class Router:

@@ -10,8 +10,8 @@ import re
 from lupa import LuaRuntime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ADDON_DIR = os.path.join(HERE, "..", "WordOfWarcraft")
-TOC = os.path.join(ADDON_DIR, "WordOfWarcraft.toc")
+ADDON_DIR = os.path.join(HERE, "..", "Azerdle")
+TOC = os.path.join(ADDON_DIR, "Azerdle.toc")
 
 FAKE_WOW = r"""
 now = 1000
@@ -250,7 +250,7 @@ function GetChannelName(name)
     return 0
 end
 function JoinTemporaryChannel(name) joined[name] = 5 end
-function GetChannelList() return 5, "WordOfWarcraftProbe", false end
+function GetChannelList() return 5, "AzerdleProbe", false end
 
 C_ChatInfo = {}
 registeredPrefixes = {}
@@ -292,14 +292,14 @@ class Client:
             chunk = loader(src, "@" + f, ns)
             if chunk is None:
                 raise SyntaxError(f)
-            chunk("WordOfWarcraft", ns)
+            chunk("Azerdle", ns)
         if ns.ANSWERS is None:
             # Words.lua wasn't loaded (or didn't define the word lists yet): stub enough for tests to run.
             stub = ('local _, ns = ...\nns.ANSWERS = {"CRANE", "GHOUL", "TOTEM", "ABBEY", "SPEED", "DRUID"}\n'
                     'ns.GUESSES = "STARE ROBOT FLOOR HELLO LEVEL KEBAB EERIE"')
-            loader(stub, "@Words.lua (stub)", ns)("WordOfWarcraft", ns)
+            loader(stub, "@Words.lua (stub)", ns)("Azerdle", ns)
         self.ns = ns
-        self.fire("ADDON_LOADED", "WordOfWarcraft")
+        self.fire("ADDON_LOADED", "Azerdle")
         self.fire("PLAYER_ENTERING_WORLD", True, False)
 
     @staticmethod
@@ -311,7 +311,7 @@ class Client:
         self.lua.globals().FireEvent(event, *args)
 
     def slash(self, text):
-        self.lua.globals().SlashCmdList.WORDOFWARCRAFT(text)
+        self.lua.globals().SlashCmdList.AZERDLE(text)
 
     def advance(self, sec):
         self.lua.globals().Advance(sec)
@@ -326,13 +326,13 @@ class Client:
         return msgs
 
     def log(self):
-        return list(self.lua.globals().WordOfWarcraftDB.log.values())
+        return list(self.lua.globals().AzerdleDB.log.values())
 
     def errors(self):
-        return [l for l in self.log() if re.search(r"(handler|/wow) .*ERROR", l)]
+        return [l for l in self.log() if re.search(r"(handler|/azerdle) .*ERROR", l)]
 
     def frame(self, name):
-        """A global frame by its CreateFrame name, e.g. client.frame("WordOfWarcraftFrame")."""
+        """A global frame by its CreateFrame name, e.g. client.frame("AzerdleFrame")."""
         return self.lua.globals()[name]
 
     def set_guild(self, value):

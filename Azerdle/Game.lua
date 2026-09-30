@@ -262,7 +262,7 @@ local EMOJI = { [CORRECT] = "\240\159\159\169", [PRESENT] = "\240\159\159\168", 
 local RAID_ICON = { [CORRECT] = "{rt4}", [PRESENT] = "{rt1}", [ABSENT] = "{rt5}" }
 
 local function header(game)
-    local title = game.mode == "daily" and ("Word of Warcraft #" .. game.puzzle) or "Word of Warcraft (practice)"
+    local title = game.mode == "daily" and ("Azerdle #" .. game.puzzle) or "Azerdle (practice)"
     -- Wordle's convention: a trailing * marks a hard-mode game.
     return title .. " " .. (game.won and #game.guesses or "X") .. "/" .. ns.MAX_GUESSES .. (game.hard and "*" or "")
 end

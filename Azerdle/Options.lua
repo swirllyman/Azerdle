@@ -1,5 +1,5 @@
 -- Options: the list of settings (defaults, labels, tooltips), the options window, its page in the game's
--- Settings > AddOns panel, and /wow options, /wow set. Values live in WordOfWarcraftDB.options through
+-- Settings > AddOns panel, and /azerdle options, /azerdle set. Values live in AzerdleDB.options through
 -- ns.opt / ns.setOpt (Core.lua); UI.lua applies the ones that change something on screen.
 
 local _, ns = ...
@@ -104,7 +104,7 @@ function opt.step(s, dir)
     end
 end
 
--- Parses typed text (/wow set) into a value for s. Returns value or nil, error.
+-- Parses typed text (/azerdle set) into a value for s. Returns value or nil, error.
 function opt.parse(s, text)
     text = (text or ""):lower()
     if s.kind == "toggle" then
@@ -325,7 +325,7 @@ end
 local PAD = 22
 
 function opt.buildDialog()
-    local f = ui.newFrame("Frame", "WordOfWarcraftOptionsFrame", UIParent, "BackdropTemplate")
+    local f = ui.newFrame("Frame", "AzerdleOptionsFrame", UIParent, "BackdropTemplate")
     f:SetSize(CONTENT_W + 2 * PAD, (opt.content:GetHeight() or 400) + 58 + PAD)
     f:SetPoint("CENTER")
     f:SetFrameStrata("DIALOG")
@@ -336,11 +336,11 @@ function opt.buildDialog()
     f:SetScript("OnDragStart", function() pcall(f.StartMoving, f) end)
     f:SetScript("OnDragStop", function() pcall(f.StopMovingOrSizing, f) end)
     ui.styleAsPanel(f)
-    table.insert(UISpecialFrames, "WordOfWarcraftOptionsFrame")
+    table.insert(UISpecialFrames, "AzerdleOptionsFrame")
 
     f.title = fontString(f, 14, "OUTLINE")
     f.title:SetPoint("TOP", f, "TOP", 0, -18)
-    f.title:SetText("Word of Warcraft Options")
+    f.title:SetText("Azerdle Options")
     f.close = ui.newFrame("Button", nil, f)
     f.close:SetSize(20, 20)
     f.close:SetPoint("TOPRIGHT", f, "TOPRIGHT", -12, -14)
@@ -360,26 +360,26 @@ end
 
 ---------------------------------------------------------------------------
 -- A page in the game's own options (Settings > AddOns, or Interface Options on older clients). Best effort:
--- if neither API exists, the gear button, minimap button and /wow options still work.
+-- if neither API exists, the gear button, minimap button and /azerdle options still work.
 ---------------------------------------------------------------------------
 
 function opt.registerBlizzard()
     local canvas = ui.newFrame("Frame", nil, UIParent)
-    canvas.name = "Word of Warcraft"   -- the legacy Interface Options panel reads the name from here
+    canvas.name = "Azerdle"   -- the legacy Interface Options panel reads the name from here
     canvas.title = fontString(canvas, 16, "OUTLINE")
     canvas.title:SetPoint("TOPLEFT", canvas, "TOPLEFT", 16, -16)
-    canvas.title:SetText("Word of Warcraft")
+    canvas.title:SetText("Azerdle")
     canvas.sub = fontString(canvas, 11)
     canvas.sub:SetPoint("TOPLEFT", canvas.title, "BOTTOMLEFT", 0, -6)
     canvas.sub:SetTextColor(0.8, 0.8, 0.8, 1)
-    canvas.sub:SetText("A daily Azeroth word puzzle. Type /wow to play. Hover an option for details.")
+    canvas.sub:SetText("A daily Azeroth word puzzle. Type /azerdle to play. Hover an option for details.")
     canvas:SetScript("OnShow", function()
         opt.dialog:Hide()
         opt.attach(canvas, 16, -64)
     end)
 
     if type(Settings) == "table" and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory then
-        local ok, cat = pcall(Settings.RegisterCanvasLayoutCategory, canvas, "Word of Warcraft")
+        local ok, cat = pcall(Settings.RegisterCanvasLayoutCategory, canvas, "Azerdle")
         if ok and cat then
             pcall(Settings.RegisterAddOnCategory, cat)
             opt.category = cat
@@ -410,11 +410,11 @@ ns.commands.options = function() ns.toggleOptions() end
 ns.commands.config = ns.commands.options
 ns.commands.settings = ns.commands.options
 
--- /wow set lists every option; /wow set <option> <value> changes one (a bare toggle name flips it).
+-- /azerdle set lists every option; /azerdle set <option> <value> changes one (a bare toggle name flips it).
 ns.commands.set = function(arg)
     local key, value = (arg or ""):match("^(%S*)%s*(.-)$")
     if not key or key == "" then
-        ns.print("options (/wow set <option> <value>):")
+        ns.print("options (/azerdle set <option> <value>):")
         for _, s in ipairs(SPEC) do
             if s.key then
                 local changed = ns.opt(s.key) ~= s.default and " |cffffd100*|r" or ""
@@ -425,7 +425,7 @@ ns.commands.set = function(arg)
     end
     local s = byKey[key:lower()]
     if not s then
-        ns.print("no option called " .. key .. " - /wow set lists them")
+        ns.print("no option called " .. key .. " - /azerdle set lists them")
         return
     end
     local v, err = opt.parse(s, value)
@@ -437,8 +437,8 @@ ns.commands.set = function(arg)
     ns.print(s.label .. ": " .. opt.valueText(s))
 end
 
-table.insert(ns.help, "/wow options - open the options window")
-table.insert(ns.help, "/wow set [option] [value] - list or change options from chat")
+table.insert(ns.help, "/azerdle options - open the options window")
+table.insert(ns.help, "/azerdle set [option] [value] - list or change options from chat")
 
 opt.SPEC = SPEC
 ns._options = opt   -- for tools/test_ui.py

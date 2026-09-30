@@ -1,15 +1,15 @@
--- Communication probe (/wow probe). Answers, before any leaderboard code exists:
+-- Communication probe (/azerdle probe). Answers, before any leaderboard code exists:
 --   * which of the player's names (Forever shows two, e.g. "John Doe") addon messages use as sender / target
 --   * which addon-message distributions work on Forever: GUILD, custom CHANNEL, WHISPER, PARTY/RAID/INSTANCE_CHAT,
 --     Battle.net game data; in the open world, in combat, in dungeons and boss encounters
 --   * which values are secret, and what the friends / guild roster / time APIs return
--- Everything is pcalled and written to WordOfWarcraftDB.log. Any client with the addon answers pings automatically,
+-- Everything is pcalled and written to AzerdleDB.log. Any client with the addon answers pings automatically,
 -- so the second player doesn't have to type anything (though their log is useful too).
 
 local _, ns = ...
 
-local PREFIX = "WoWordProbe"        -- addon message prefix, max 16 chars
-local CHANNEL = "WordOfWarcraftProbe"    -- hidden custom channel for the "global" test
+local PREFIX = "AzerdleProbe"        -- addon message prefix, max 16 chars
+local CHANNEL = "AzerdleProbe"    -- hidden custom channel for the "global" test
 local BURST, RATE = 6, 1           -- send queue: burst of 6, then 1 message per second
 local AUTO_INTERVAL = 60           -- seconds between automatic ping rounds in auto mode
 local MAX_CHAT_SENDER_LOGS = 30    -- normal chat events logged per session (sender fields only, never text)
@@ -724,7 +724,7 @@ end)
 
 local sub = {}
 sub[""] = function()
-    log("===== /wow probe (full) =====", true)
+    log("===== /azerdle probe (full) =====", true)
     snapshotIdentity()
     snapshotTime()
     snapshotApis()
@@ -743,7 +743,7 @@ sub.ping = function() pingRound("manual ping") end
 sub.target = pingTarget
 sub.whisper = function(arg)
     if arg == "" then
-        log("usage: /wow probe whisper <name>", true)
+        log("usage: /azerdle probe whisper <name>", true)
         return
     end
     log("whisper ping to '" .. arg .. "'", true)
@@ -766,10 +766,10 @@ ns.commands.probe = function(arg)
     local cmd, rest = arg:match("^(%S*)%s*(.-)$")
     local f = sub[(cmd or ""):lower()]
     if not f then
-        ns.print("probe: /wow probe [ping | target | whisper <name> | auto | note <text> | status]")
+        ns.print("probe: /azerdle probe [ping | target | whisper <name> | auto | note <text> | status]")
         return
     end
     f(rest or "")
 end
-table.insert(ns.help, "/wow probe - full comms probe (identity, APIs, friends, guild, ping every channel)")
-table.insert(ns.help, "/wow probe ping | target | whisper <name> | auto | note <text> | status")
+table.insert(ns.help, "/azerdle probe - full comms probe (identity, APIs, friends, guild, ping every channel)")
+table.insert(ns.help, "/azerdle probe ping | target | whisper <name> | auto | note <text> | status")

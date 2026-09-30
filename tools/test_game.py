@@ -1,4 +1,4 @@
-"""Unit tests for the game logic in WordOfWarcraft/Game.lua (scoring, repeated letters, daily word pick, stats,
+"""Unit tests for the game logic in Azerdle/Game.lua (scoring, repeated letters, daily word pick, stats,
 save/restore, share text), run in real Lua via lupa, plus sanity checks on the generated Words.lua.
 
     pip install lupa
@@ -10,7 +10,7 @@ import sys
 from lupa import LuaRuntime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ADDON = os.path.join(HERE, "..", "WordOfWarcraft")
+ADDON = os.path.join(HERE, "..", "Azerdle")
 EPOCH = 1790553600
 DAY = 86400
 
@@ -30,7 +30,7 @@ def load(words_lua=None):
     lua = LuaRuntime(unpack_returned_tuples=True)
     lua.execute("serverNow = %d; function GetServerTime() return serverNow end" % EPOCH)
     ns = lua.table()
-    loader = lua.eval("function(src, name, ns) local f = assert(load(src, name)); f('WordOfWarcraft', ns) end")
+    loader = lua.eval("function(src, name, ns) local f = assert(load(src, name)); f('Azerdle', ns) end")
     if words_lua is None:
         words_lua = ('local _, ns = ...\nns.ANSWERS = {"DRUID", "GHOUL", "TOTEM", "ABBEY", "SPEED"}\n'
                      'ns.GUESSES = [[CRANE KEBAB EERIE HELLO LEVEL FLOOR ROBOT STARE]]')
@@ -164,7 +164,7 @@ def test_hard_mode():
     restored = ns.restoreDaily(saved)
     check(restored.hard is True and len(restored.guesses) == 2, "restore keeps hard mode and skips its checks")
     ns.submitGuess(restored, "SPEED")
-    check(ns.shareText(restored, "chat").startswith("Word of Warcraft #1 3/6*"), "hard-mode share text ends in *")
+    check(ns.shareText(restored, "chat").startswith("Azerdle #1 3/6*"), "hard-mode share text ends in *")
     check(ns.saveDaily(easy).hard is None, "normal games don't save a hard flag")
 
 
@@ -234,15 +234,15 @@ def test_share():
     ns.submitGuess(game, "KEBAB")
     ns.submitGuess(game, "ABBEY")
     emoji = ns.shareText(game, "emoji")
-    check(emoji == "Word of Warcraft #4 2/6\n\n⬛\U0001f7e8\U0001f7e9\U0001f7e8\U0001f7e8\n" + "\U0001f7e9" * 5,
+    check(emoji == "Azerdle #4 2/6\n\n⬛\U0001f7e8\U0001f7e9\U0001f7e8\U0001f7e8\n" + "\U0001f7e9" * 5,
           "emoji share text: %r" % emoji)
     chat = ns.shareText(game, "chat")
-    check(chat == "Word of Warcraft #4 2/6: {rt5}{rt1}{rt4}{rt1}{rt1} " + "{rt4}" * 5, "chat share text")
+    check(chat == "Azerdle #4 2/6: {rt5}{rt1}{rt4}{rt1}{rt1} " + "{rt4}" * 5, "chat share text")
     lost = ns.newGame("daily", 5)
     for _ in range(6):
         ns.submitGuess(lost, "CRANE")
     chat = ns.shareText(lost, "chat")
-    check(chat.startswith("Word of Warcraft #5 X/6") and len(chat.encode()) <= 255, "loss share fits chat limit")
+    check(chat.startswith("Azerdle #5 X/6") and len(chat.encode()) <= 255, "loss share fits chat limit")
     check("SPEED" not in ns.shareText(lost, "emoji"), "share text never contains the answer")
 
 

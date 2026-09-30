@@ -1,4 +1,4 @@
-"""Smoke test for WordOfWarcraft/UI.lua: drives the fake client like a player (typing through the invisible
+"""Smoke test for Azerdle/UI.lua: drives the fake client like a player (typing through the invisible
 EditBox's scripts and clicking on-screen keyboard buttons), and checks the tile grid, keyboard colouring, toasts,
 win/loss flavour text, stats recording, sharing, and save/restore across a simulated reload.
 
@@ -86,7 +86,7 @@ def test_open_close_and_typing():
     c, ns, ui = new_client()
     check(not ui.frame.IsShown(ui.frame), "window starts closed")
     c.slash("")
-    check(ui.frame.IsShown(ui.frame), "/wow opens the window")
+    check(ui.frame.IsShown(ui.frame), "/azerdle opens the window")
     check(ui.editBox.focused, "editbox focused on open")
     check(ui.hintText.shownFlag, "typing hint shown while focused")
 
@@ -172,8 +172,8 @@ def test_practice_mode_no_stats():
     c.slash("")
     stats_before = to_python(ns.cdb.stats)
     c.slash("practice")
-    check(ui.mode == "practice", "/wow practice switches to practice mode")
-    check(ui.frame.IsShown(ui.frame), "/wow practice opens the window")
+    check(ui.mode == "practice", "/azerdle practice switches to practice mode")
+    check(ui.frame.IsShown(ui.frame), "/azerdle practice opens the window")
     practice_answer = ui.practiceGame.answer
     type_word(ui, practice_answer)
     c.advance(2)
@@ -240,7 +240,7 @@ def test_colorblind_toggle():
     check(green_before == [0.42, 0.67, 0.39], "normal correct colour before toggling colourblind mode")
 
     c.slash("colorblind")
-    check(ns.opt("colorblind") is True and ns.db.options.colorblind is True, "/wow colorblind toggles the saved option")
+    check(ns.opt("colorblind") is True and ns.db.options.colorblind is True, "/azerdle colorblind toggles the saved option")
     check(tile_fill(ui, 1, 1)[:3] == [0.96, 0.47, 0.24], "colourblind mode recolours correct tiles orange")
     for ch in answer:
         c_ = list(ui.keyButtons[ch].bg.color.values())[:3]
@@ -258,12 +258,12 @@ def test_reload_restores_daily_progress():
     wrong = "STARE" if answer != "STARE" else "CRANE"
     type_word(ui1, wrong)
     c1.advance(2)
-    saved_char_db = to_python(c1.lua.globals().WordOfWarcraftCharDB)
+    saved_char_db = to_python(c1.lua.globals().AzerdleCharDB)
 
     c2 = Client()
-    c2.lua.globals().WordOfWarcraftCharDB = c2.lua.table_from(saved_char_db, recursive=True)
+    c2.lua.globals().AzerdleCharDB = c2.lua.table_from(saved_char_db, recursive=True)
     # Re-run the ADDON_LOADED handlers so ui.onLoaded restores from the (now pre-populated) char DB.
-    c2.fire("ADDON_LOADED", "WordOfWarcraft")
+    c2.fire("ADDON_LOADED", "Azerdle")
     ns2, ui2 = c2.ns, c2.ns._ui
     check(lua_list(ui2.dailyGame.guesses) == [wrong], "reload restores today's saved guess")
     check(tile_text(ui2, 1, 1) == wrong[0], "restored guess is painted into the grid without opening the window")
@@ -279,7 +279,7 @@ def test_day_rollover_gives_a_new_game():
     puzzle1 = ui.dailyGame.puzzle
     type_word(ui, "STARE" if ui.dailyGame.answer != "STARE" else "CRANE")
     c.advance(2)
-    frame = c.frame("WordOfWarcraftFrame")
+    frame = c.frame("AzerdleFrame")
     frame.Hide(frame)
 
     c.advance(86400 + 5)   # past UTC midnight
@@ -313,11 +313,11 @@ def test_share_box_gives_keyboard_back():
     c.advance(3)
     click(ui.copyBtn)
     box = ui.shareBox
-    check(box.IsShown(box) and box.text.startswith("Word of Warcraft #"), "copy box shows the share text")
+    check(box.IsShown(box) and box.text.startswith("Azerdle #"), "copy box shows the share text")
     box.scripts["OnTextChanged"](box, True)
     box.text = "edited"
     box.scripts["OnTextChanged"](box, True)
-    check(box.text.startswith("Word of Warcraft #"), "copy box is read-only")
+    check(box.text.startswith("Azerdle #"), "copy box is read-only")
     box.scripts["OnEscapePressed"](box)
     check(not box.IsShown(box) and ui.editBox.focused, "Esc in the copy box hands the keyboard back to the game")
     check(not c.errors() and not all_errors(c), "no Lua errors in the copy box")
@@ -335,16 +335,16 @@ def opt_widget(c, key):
 def test_options_window_and_set():
     c, ns, ui = new_client()
     opts = ns._options
-    dialog = c.frame("WordOfWarcraftOptionsFrame")
+    dialog = c.frame("AzerdleOptionsFrame")
     check(not dialog.IsShown(dialog), "options window starts closed")
     c.slash("options")
-    check(dialog.IsShown(dialog) and opts.content.IsShown(opts.content), "/wow options opens the options window")
+    check(dialog.IsShown(dialog) and opts.content.IsShown(opts.content), "/azerdle options opens the options window")
     check(same(c, opts.content.GetPoint(opts.content)[1], dialog), "option rows live in the options window")
     for s in lua_list(opts.SPEC):
         if s.key:
             check(opts.widgets[s.key] is not None, "widget for option %s" % s.key)
     cats = lua_list(c.lua.globals().settingsCategories)
-    check(len(cats) == 1 and cats[0].name == "Word of Warcraft", "page registered in Settings > AddOns")
+    check(len(cats) == 1 and cats[0].name == "Azerdle", "page registered in Settings > AddOns")
 
     # The Settings page borrows the same rows.
     canvas = cats[0].frame
@@ -376,17 +376,17 @@ def test_options_window_and_set():
     click(opt_widget(c, "sounds"))
     check(w.label.textColor[1] == 0.5, "key sounds row dims when sounds are off")
 
-    # /wow set
+    # /azerdle set
     c.slash("set")
-    check(any("scale = 150%" in l for l in c.chat()), "/wow set lists options with values")
+    check(any("scale = 150%" in l for l in c.chat()), "/azerdle set lists options with values")
     c.slash("set scale 0.8")
-    check(ns.opt("scale") == 0.8, "/wow set scale 0.8")
+    check(ns.opt("scale") == 0.8, "/azerdle set scale 0.8")
     c.slash("set opacity 50%")
-    check(ns.opt("opacity") == 0.5, "/wow set opacity 50%")
+    check(ns.opt("opacity") == 0.5, "/azerdle set opacity 50%")
     c.slash("set keyboardlayout azerty")
-    check(ns.opt("keyboardLayout") == "azerty", "/wow set is case-insensitive for names")
+    check(ns.opt("keyboardLayout") == "azerty", "/azerdle set is case-insensitive for names")
     c.slash("set hardMode")
-    check(ns.opt("hardMode") is True, "/wow set <toggle> flips it")
+    check(ns.opt("hardMode") is True, "/azerdle set <toggle> flips it")
     c.slash("set postChannel nowhere")
     check(ns.opt("postChannel") == "auto" and any("use one of" in l for l in c.chat()), "bad choice rejected")
     c.slash("set nonsense 1")
@@ -417,7 +417,7 @@ def test_instant_reveal_and_sounds():
 
     ns.setOpt("sounds", False)
     g.sounds = c.lua.table()
-    c.frame("WordOfWarcraftFrame").Hide(c.frame("WordOfWarcraftFrame"))
+    c.frame("AzerdleFrame").Hide(c.frame("AzerdleFrame"))
     check(len(g.sounds) == 0, "sounds off silences everything")
     check(not c.errors() and not all_errors(c), "no Lua errors with instant reveal and sounds")
 
@@ -536,26 +536,26 @@ def test_reset_stats_needs_two_clicks():
 
 def test_minimap_button():
     c, ns, ui = new_client()
-    b = c.frame("WordOfWarcraftMinimapButton")
+    b = c.frame("AzerdleMinimapButton")
     check(b is not None and b.shownFlag, "minimap button shown by default")
     check(same(c, b.GetPoint(b)[1], c.lua.globals().Minimap), "button sits on the minimap")
     b.scripts["OnClick"](b, "LeftButton")
     check(ui.frame.shownFlag, "left-click opens the game")
     b.scripts["OnClick"](b, "RightButton")
-    check(c.frame("WordOfWarcraftOptionsFrame").shownFlag, "right-click opens the options")
+    check(c.frame("AzerdleOptionsFrame").shownFlag, "right-click opens the options")
     ns.setOpt("minimapButton", False)
     check(not b.shownFlag, "minimap button can be hidden")
-    c.lua.globals().WordOfWarcraft_OnCompartmentClick("WordOfWarcraft", "RightButton")
-    check(not c.frame("WordOfWarcraftOptionsFrame").shownFlag, "addon compartment right-click toggles options")
+    c.lua.globals().Azerdle_OnCompartmentClick("Azerdle", "RightButton")
+    check(not c.frame("AzerdleOptionsFrame").shownFlag, "addon compartment right-click toggles options")
     check(not c.errors() and not all_errors(c), "no Lua errors with the minimap button")
 
 
 def test_old_settings_migrate():
     c = Client()
     g = c.lua.globals()
-    g.WordOfWarcraftCharDB = c.lua.table_from({"colorblind": True})
-    g.WordOfWarcraftDB = c.lua.table_from({"scale": 1.2})
-    c.fire("ADDON_LOADED", "WordOfWarcraft")
+    g.AzerdleCharDB = c.lua.table_from({"colorblind": True})
+    g.AzerdleDB = c.lua.table_from({"scale": 1.2})
+    c.fire("ADDON_LOADED", "Azerdle")
     ns = c.ns
     check(ns.opt("colorblind") is True and ns.cdb.colorblind is None, "per-character colourblind moves to options")
     check(ns.opt("scale") == 1.2 and ns.db.scale is None, "old window scale moves to options")

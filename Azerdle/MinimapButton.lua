@@ -1,6 +1,6 @@
 -- Minimap button: left-click plays, right-click opens the options, drag moves it around the minimap's edge.
 -- The tooltip shows today's progress and streak. Shown or hidden by the "minimapButton" option; the angle is
--- saved in WordOfWarcraftDB.minimapAngle.
+-- saved in AzerdleDB.minimapAngle.
 
 local _, ns = ...
 local ui = ns.ui
@@ -32,7 +32,7 @@ function mm.tooltip(owner)
     if not GameTooltip then return end
     pcall(function()
         GameTooltip:SetOwner(owner, "ANCHOR_LEFT")
-        GameTooltip:SetText("Word of Warcraft", 1, 0.82, 0)
+        GameTooltip:SetText("Azerdle", 1, 0.82, 0)
         local game = ui.dailyGame
         if game then
             local status
@@ -58,7 +58,7 @@ function mm.tooltip(owner)
 end
 
 function mm.build()
-    local b = ui.newFrame("Button", "WordOfWarcraftMinimapButton", Minimap)
+    local b = ui.newFrame("Button", "AzerdleMinimapButton", Minimap)
     b:SetSize(31, 31)
     pcall(b.SetFrameStrata, b, "MEDIUM")
     pcall(b.SetFrameLevel, b, 8)

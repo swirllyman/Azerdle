@@ -118,7 +118,7 @@ end
 ---------------------------------------------------------------------------
 
 function ui.buildFrame()
-    local f = newFrame("Frame", "WordOfWarcraftFrame", UIParent, "BackdropTemplate")
+    local f = newFrame("Frame", "AzerdleFrame", UIParent, "BackdropTemplate")
     f:SetSize(FRAME_W, FRAME_H)
     f:SetPoint("CENTER")
     f:SetFrameStrata("HIGH")
@@ -139,7 +139,7 @@ function ui.buildFrame()
         if ns.opt("captureKeys") then ui.editBox:SetFocus() end
         ui.playSound("open")
     end)
-    table.insert(UISpecialFrames, "WordOfWarcraftFrame")
+    table.insert(UISpecialFrames, "AzerdleFrame")
     ui.frame = f
 
     -- Draggable title strip.
@@ -155,7 +155,7 @@ function ui.buildFrame()
     ui.titleText = bar:CreateFontString(nil, "OVERLAY")
     ui.titleText:SetPoint("CENTER")
     ui.titleText:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
-    ui.titleText:SetText("Word of Warcraft")
+    ui.titleText:SetText("Azerdle")
 
     ui.closeBtn = newFrame("Button", nil, f)
     ui.closeBtn:SetSize(20, 20)
@@ -454,9 +454,9 @@ end
 function ui.updateTitle()
     local hard = ui.isHard() and " |cffff5050(Hard)|r" or ""
     if ui.mode == "daily" then
-        ui.titleText:SetText("Word of Warcraft #" .. ui.dailyGame.puzzle .. hard)
+        ui.titleText:SetText("Azerdle #" .. ui.dailyGame.puzzle .. hard)
     else
-        ui.titleText:SetText("Word of Warcraft - Practice" .. hard)
+        ui.titleText:SetText("Azerdle - Practice" .. hard)
     end
 end
 
@@ -915,7 +915,7 @@ ns.on("PLAYER_ENTERING_WORLD", function()
         ns.cdb.lastAnnounced = today
         local game = ui.dailyGame or ns.restoreDaily(ns.cdb.daily)
         if not game.done then
-            ns.print("Word of Warcraft #" .. today .. " is ready - type /wow to play.")
+            ns.print("Azerdle #" .. today .. " is ready - type /azerdle to play.")
         end
     end)
 end)
@@ -929,7 +929,7 @@ function ui.scheduleNewWordNotice()
         if today > puzzle then ui.checkRollover() end
         if today > puzzle and ns.cdb and ns.opt("newWordReminder") then
             ns.cdb.lastAnnounced = today
-            ns.print("A new word is out: Word of Warcraft #" .. today .. " - type /wow to play.")
+            ns.print("A new word is out: Azerdle #" .. today .. " - type /azerdle to play.")
         end
         ui.scheduleNewWordNotice()
     end)
@@ -952,7 +952,7 @@ end
 ns.commands.scale = function(arg)
     local v = tonumber(arg)
     if not v then
-        ns.print("window scale: " .. ns.opt("scale") .. " (/wow scale 0.5 - 1.5)")
+        ns.print("window scale: " .. ns.opt("scale") .. " (/azerdle scale 0.5 - 1.5)")
         return
     end
     ns.setOpt("scale", math.max(0.5, math.min(1.5, v)))
@@ -966,15 +966,15 @@ ns.commands.hard = function()
     ns.setOpt("hardMode", not ns.opt("hardMode"))
     ns.print("hard mode: " .. tostring(ns.opt("hardMode")))
 end
-table.insert(ns.help, "/wow - open or close the game window")
-table.insert(ns.help, "/wow practice - start a practice word (doesn't count toward stats)")
-table.insert(ns.help, "/wow stats - open the stats panel")
-table.insert(ns.help, "/wow scale <0.5-1.5> - resize the game window")
-table.insert(ns.help, "/wow colorblind - toggle colourblind-friendly tile colours")
-table.insert(ns.help, "/wow hard - toggle hard mode (hints you find must be used)")
+table.insert(ns.help, "/azerdle (or /azd) - open or close the game window")
+table.insert(ns.help, "/azerdle practice - start a practice word (doesn't count toward stats)")
+table.insert(ns.help, "/azerdle stats - open the stats panel")
+table.insert(ns.help, "/azerdle scale <0.5-1.5> - resize the game window")
+table.insert(ns.help, "/azerdle colorblind - toggle colourblind-friendly tile colours")
+table.insert(ns.help, "/azerdle hard - toggle hard mode (hints you find must be used)")
 
 -- Left-click toggles the game; right-click opens the options.
-function WordOfWarcraft_OnCompartmentClick(_, button)
+function Azerdle_OnCompartmentClick(_, button)
     if button == "RightButton" and ns.toggleOptions then ns.toggleOptions() else ui.toggle() end
 end
 

@@ -1,4 +1,4 @@
-"""Builds WordOfWarcraft/Words.lua from the curated lists in tools/data/.
+"""Builds Azerdle/Words.lua from the curated lists in tools/data/.
 
     pip install wordfreq
     python tools/build_words.py
@@ -22,7 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "data")
-OUT = os.path.join(HERE, "..", "WordOfWarcraft", "Words.lua")
+OUT = os.path.join(HERE, "..", "Azerdle", "Words.lua")
 LENGTH = 5
 MIN_ZIPF = 2.0
 SEED = 20260928

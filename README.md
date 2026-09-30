@@ -1,8 +1,8 @@
-# Word of Warcraft
+# Azerdle
 
 **A daily word puzzle set in Azeroth.** Guess the five-letter Warcraft word in six tries. Everyone gets the same word each day, so you can compare results with your guild and friends.
 
-Type `/wow` to play.
+Type `/azerdle` (or `/azd`) to play.
 
 ---
 
@@ -30,7 +30,7 @@ Type `/wow` to play.
 
 ## Options
 
-Open the options with the gear icon in the game window, by right-clicking the minimap button, with `/wow options`, or from the game's **Settings > AddOns** page. Hover over an option to see what it does.
+Open the options with the gear icon in the game window, by right-clicking the minimap button, with `/azerdle options`, or from the game's **Settings > AddOns** page. Hover over an option to see what it does.
 
 - **Appearance:** colourblind mode, window scale, background opacity, tile reveal speed (instant to slow), lock window position, minimap button.
 - **Keyboard:** on-screen layout, swap Enter and Backspace, type as soon as the window opens (turn this off to keep your movement keys until you click the window), typing hint.
@@ -45,13 +45,13 @@ Options apply to every character on your account. Stats are kept separately for 
 
 | Command | What it does |
 |---|---|
-| `/wow` | Open today's puzzle |
-| `/wow practice` | Play a practice word |
-| `/wow stats` | Show your statistics |
-| `/wow colorblind` | Turn colourblind mode on or off |
-| `/wow hard` | Turn hard mode on or off |
-| `/wow options` | Open the options window |
-| `/wow set` | List every option; `/wow set <option> <value>` changes one (e.g. `/wow set scale 1.2`) |
+| `/azerdle` | Open today's puzzle |
+| `/azerdle practice` | Play a practice word |
+| `/azerdle stats` | Show your statistics |
+| `/azerdle colorblind` | Turn colourblind mode on or off |
+| `/azerdle hard` | Turn hard mode on or off |
+| `/azerdle options` | Open the options window |
+| `/azerdle set` | List every option; `/azerdle set <option> <value>` changes one (e.g. `/azerdle set scale 1.2`) |
 
 ## Coming soon
 

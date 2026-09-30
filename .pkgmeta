@@ -1,9 +1,9 @@
-# CurseForge packager: the addon lives in WordOfWarcraft/, not at the repo root. The repo is checked out as
-# Word-Of-Warcraft/, the addon folder is moved out to the top of the zip, and the rest is left out.
-package-as: Word-Of-Warcraft
+# CurseForge packager: the addon lives in Azerdle/, not at the repo root. The repo is checked out as
+# Azerdle/, the addon folder is moved out to the top of the zip, and the rest is left out.
+package-as: Azerdle
 
 move-folders:
-  Word-Of-Warcraft/WordOfWarcraft: WordOfWarcraft
+  Azerdle/Azerdle: Azerdle
 
 ignore:
   - tools

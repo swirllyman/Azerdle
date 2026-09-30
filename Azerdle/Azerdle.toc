@@ -1,0 +1,18 @@
+## Interface: 16001
+## Title: Azerdle
+## Notes: A daily Azeroth-themed word puzzle. Same word for everyone, new every day. Type /azerdle to play.
+## Author: Joe Greive
+## Version: @project-version@
+## SavedVariables: AzerdleDB
+## SavedVariablesPerCharacter: AzerdleCharDB
+## IconTexture: Interface\Icons\INV_Scroll_03
+## AddonCompartmentFunc: Azerdle_OnCompartmentClick
+## X-Curse-Project-ID: 1718001
+
+Core.lua
+Words.lua
+Game.lua
+UI.lua
+Options.lua
+MinimapButton.lua
+Probe.lua
